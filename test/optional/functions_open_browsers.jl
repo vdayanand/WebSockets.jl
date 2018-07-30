@@ -4,7 +4,7 @@ function fwhich(s)
     fi = ""
     if Sys.is_windows()
         try
-            fi = split(readstring(`where.exe $s`), "\r\n")[1]
+            fi = split(read(`where.exe $s`, String), "\r\n")[1]
             if !isfile(fi)
                 fi = ""
             end
@@ -132,7 +132,7 @@ function open_testpage(shortbrowsername)
     return true
 end
 function open_all_browsers()
-    info("Try to open browsers")
+    @info("Try to open browsers")
     brs = ["chrome", "firefox", "iexplore", "safari", "phantomjs"]
 
     openbrowsers = 0

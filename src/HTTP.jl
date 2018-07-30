@@ -1,4 +1,4 @@
-info("Loading HTTP methods...")
+@info("Loading HTTP methods...")
 
 """
 Initiate a websocket|client connection to server defined by url. If the server accepts
@@ -122,7 +122,7 @@ try
         end
     end
 catch err
-    showerror(STDERR, err)
+    showerror(stderr, err)
     println.(catch_stacktrace()[1:4])
 end
 ```

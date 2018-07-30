@@ -1,5 +1,5 @@
 # included in runtests.jl
-using Base.Test
+using Test
 import WebSockets: maskswitch!,
     write_fragment,
     read_frame,
@@ -198,7 +198,7 @@ end
 
 # Test read(ws) bad mask error handling
 
-info("Provoking close handshake from protocol error without a peer. Waits a reasonable time")
+@info("Provoking close handshake from protocol error without a peer. Waits a reasonable time")
 for clientwriting in [false, true]
     op = WebSockets.OPCODE_TEXT
     test_str = "123456"
