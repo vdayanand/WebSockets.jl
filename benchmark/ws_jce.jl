@@ -12,7 +12,7 @@ using ..WebSockets
 # We want to log to a separate file, and so use our own
 # instance of logutils_ws in this process
 import logutils_ws: logto, clog, zlog, zflush, clog_notime
-const SRCPATH = Base.source_dir() == nothing ? Pkg.dir("WebSockets", "benchmark") :Base.source_dir()
+const SRCPATH = Base.source_dir() == nothing ? Pkg.dir("WebSockets", "benchmark") : Base.source_dir()
 const LOGFILE = "ws_jce.log"
 
 const PORT = 8000

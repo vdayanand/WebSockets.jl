@@ -1,6 +1,6 @@
 # included in runtests.jl
 
-using Base.Test
+using Test
 import HTTP
 import HttpServer: HttpHandler,
         Server
@@ -31,7 +31,7 @@ res = WebSockets.open((_)->nothing, URL);
 put!(server_WS.in, HTTP.Servers.KILL)
 
 
-info("Start a HTTP server with a ws handler that always reads guarded.\n")
+@info("Start a HTTP server with a ws handler that always reads guarded.\n")
 sleep(1)
 server_WS = ServerWS(   HTTP.HandlerFunction(req-> HTTP.Response(200)), 
                         WebSockets.WebsocketHandler() do req, ws_serv
@@ -43,7 +43,7 @@ tas = @schedule WebSockets.serve(server_WS, "127.0.0.1", THISPORT)
 while !istaskstarted(tas); yield(); end
 sleep(1)
 
-info("Attempt to read guarded from a closing ws|client. Check for return false.\n")
+@info("Attempt to read guarded from a closing ws|client. Check for return false.\n")
 sleep(1)
 WebSockets.open(URL) do ws_client
         close(ws_client)
@@ -52,7 +52,7 @@ WebSockets.open(URL) do ws_client
 sleep(1)
 
 
-info("Attempt to write guarded from a closing ws|client. Check for return false.\n")
+@info("Attempt to write guarded from a closing ws|client. Check for return false.\n")
 sleep(1)
 WebSockets.open(URL) do ws_client
     close(ws_client)
@@ -61,7 +61,7 @@ end;
 sleep(1)
 
 
-info("Attempt to read from closing ws|client. Check caught error.\n")
+@info("Attempt to read from closing ws|client. Check caught error.\n")
 sleep(1)
 try 
     WebSockets.open(URL) do ws_client
@@ -75,7 +75,7 @@ end
 sleep(1)
 
 
-info("Attempt to write to a closing ws|client (this takes some time, there is no check
+@info("Attempt to write to a closing ws|client (this takes some time, there is no check
       in WebSockets against it). Check caught error.\n")
 sleep(1)
 try 
@@ -90,7 +90,7 @@ end
 put!(server_WS.in, HTTP.Servers.KILL)
 
 
-info("\n\nStart a HttpServer\n")
+@info("\n\nStart a HttpServer\n")
 sleep(1)
 server = Server(HttpHandler() do req, res
                     Response(200)
@@ -103,7 +103,7 @@ server = Server(HttpHandler() do req, res
 tas = @schedule run(server, THISPORT)
 while !istaskstarted(tas);yield();end
 sleep(3)
-info("Attempt to write to a closing ws|client, served by HttpServer (this takes some time, there is no check
+@info("Attempt to write to a closing ws|client, served by HttpServer (this takes some time, there is no check
       in WebSockets against it). Check caught error.")
 try 
     WebSockets.open(URL) do ws_client
@@ -117,7 +117,7 @@ close(server)
 sleep(1)
 
 
-info("\nStart an async HTTP server. The wshandler use global channels for inspecting caught errors.\n")
+@info("\nStart an async HTTP server. The wshandler use global channels for inspecting caught errors.\n")
 sleep(1)
 chfromserv=Channel(2)
 server_WS = ServerWS(   HTTP.HandlerFunction(req-> HTTP.Response(200)), 
@@ -135,7 +135,7 @@ tas = @schedule WebSockets.serve(server_WS, "127.0.0.1", THISPORT)
 while !istaskstarted(tas); yield(); end
 sleep(3)
 
-info("Open a ws|client, close it out of protocol. Check server error on channel.\n")
+@info("Open a ws|client, close it out of protocol. Check server error on channel.\n")
 res = WebSockets.open((ws)-> close(ws.socket), URL)
 @test res.status == 101
 sleep(1)
@@ -147,7 +147,7 @@ stack_trace = take!(chfromserv)
 put!(server_WS.in, HTTP.Servers.KILL)
 sleep(1)
 
-info("\nStart an async HTTP server. Errors are output on built-in channel\n")
+@info("\nStart an async HTTP server. Errors are output on built-in channel\n")
 sleep(1)
 server_WS = ServerWS(   HTTP.HandlerFunction(req-> HTTP.Response(200)), 
                         WebSockets.WebsocketHandler() do ws_serv
@@ -159,7 +159,7 @@ tas = @schedule WebSockets.serve(server_WS, "127.0.0.1", THISPORT, false)
 while !istaskstarted(tas); yield(); end
 sleep(3)
 
-info("Open a ws|client, close it out of protocol. Check server error on server.out channel.\n")
+@info("Open a ws|client, close it out of protocol. Check server error on server.out channel.\n")
 sleep(1)
 WebSockets.open((ws)-> close(ws.socket), URL);
 err = take!(server_WS.out)
