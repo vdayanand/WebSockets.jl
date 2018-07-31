@@ -674,7 +674,9 @@ function readguarded(ws)
     end
 end
 
-
-@require HTTP include("HTTP.jl")
-@require HttpServer include("HttpServer.jl")
+Requires.@init begin
+    @require HTTP="cd3eb016-35fb-5094-929b-558a96fad6f3" begin
+      include(joinpath(@__DIR__, "HTTP.jl"))
+  end
+end
 end # module WebSockets
